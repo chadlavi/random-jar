@@ -25,6 +25,7 @@ const ActionDisplay = styled(Paragraph)`
   border-radius: calc(var(--clear-unit) * 2);
   background: var(--clear-zebra);
   width: calc(var(--clear-unit) * 64);
+  max-width: 100%;
   margin: auto;
 `
 
@@ -42,6 +43,17 @@ const ShowAction = ({action}: {action?: Action}): JSX.Element => {
 
 const App: React.FC = () => {
   const [action, setAction] = React.useState<Action | undefined>()
+
+  const updateAction = (): void => {
+    const oldAction = action
+    const newAction = getAction()
+    if (!oldAction || (oldAction.label !== newAction.label)) {
+      setAction(newAction)
+    } else {
+      updateAction()
+    }
+  }
+
   return (
     <CenteredPage>
       <Header>You should...</Header>
@@ -49,7 +61,7 @@ const App: React.FC = () => {
       <Paragraph>
         <Button
           primary={!action}
-          onClick={(): void => setAction(getAction())}
+          onClick={updateAction}
         >
           {action ? 'Or c' : 'C'}lick me to generate a{action ? 'nother' : ''} random action
         </Button>
